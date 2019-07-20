@@ -10,12 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
-import static tools.redfox.bamboo.redoc.action.ViewDocumentationAction.findReDocArtifact;
+import static tools.redfox.bamboo.redoc.helper.ReDocHelper.findReDocArtifact;
+import static tools.redfox.bamboo.redoc.helper.ReDocHelper.getAvailableArtifactNames;
 
-public class LinkConfition implements Condition {
+public class LinkCondition implements Condition {
     private ResultsSummaryManager resultsSummaryManager;
 
-    public LinkConfition(@ComponentImport ResultsSummaryManager resultsSummaryManager) {
+    public LinkCondition(@ComponentImport ResultsSummaryManager resultsSummaryManager) {
         this.resultsSummaryManager = resultsSummaryManager;
     }
 
@@ -34,7 +35,7 @@ public class LinkConfition implements Condition {
                 if (buildResults == null || !buildResults.isFinished()) {
                     return false;
                 }
-                return findReDocArtifact(buildResults.getArtifactLinks()) != null;
+                return findReDocArtifact(buildResults.getArtifactLinks(), getAvailableArtifactNames(buildResults)) != null;
             } catch (Exception e) {
             }
         }

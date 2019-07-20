@@ -14,6 +14,7 @@ import com.atlassian.bamboo.v2.build.agent.capability.CapabilityContext;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -23,6 +24,9 @@ public class ReDocTaskType implements TaskType {
     private ProcessService processService;
     private EnvironmentVariableAccessor environmentVariableAccessor;
     private CapabilityContext capabilityContext;
+
+    public static final String DEFAULT_TITLE =  "ReDoc Documentation";
+    public static final String PLUGIN_KEY =  "tools.redfox.bamboo.redoc:tools.redfox.redoc.task";
 
     public ReDocTaskType(
             @ComponentImport final ProcessService processService,
@@ -76,7 +80,7 @@ public class ReDocTaskType implements TaskType {
         taskContext.getBuildContext().getArtifactContext().getDefinitionContexts().add(
                 new ArtifactDefinitionContextImpl(
                         new ArtifactDefinitionImpl(
-                                "ReDoc Documentation",
+                                StringUtils.isBlank(taskContext.getUserDescription()) ? DEFAULT_TITLE : taskContext.getUserDescription(),
                                 taskContext.getWorkingDirectory().getAbsolutePath(),
                                 "redoc-static.html"
                         ),

@@ -23,11 +23,10 @@
     <web-item key="redoc:${buildKey}-${buildNumber}" name="redoc" section="results.subMenu/results" weight="40">
         <label key="ReDoc"/>
         <link linkId="redoc:${buildKey}-${buildNumber}">/browse/${buildKey}-${buildNumber}/redoc</link>
-        <condition class="tools.redfox.bamboo.redoc.action.LinkConfition"/>
+        <condition class="tools.redfox.bamboo.redoc.action.LinkCondition"/>
     </web-item>
 
-    <web-panel key="tools.redfox.redoc.panel.documentation" location="chainresult.summary.right">
-        <resource name="view" type="freemarker" location="/templates/tools/redfox/redoc/links.ftl"/>
+    <web-panel key="tools.redfox.redoc.panel.documentation" location="chainresult.summary.right" class="tools.redfox.bamboo.redoc.action.LinksPanel">
     </web-panel>
 
     <servlet-filter name="Url Rewriting" key="tools.redfox.redoc.filter.url" class="tools.redfox.bamboo.redoc.servlet.UrlFilter" location="before-dispatch" weight="200">

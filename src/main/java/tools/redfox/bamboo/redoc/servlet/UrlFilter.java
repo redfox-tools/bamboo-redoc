@@ -6,20 +6,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
 
 public class UrlFilter implements Filter {
-    private static final Map<Pattern, String> urlMappings = new HashMap();
-
-    static {
-        putRegex(urlMappings, "/browse/([A-Z0-9]{2,})-([A-Z0-9]{2,}(?:-[A-Z][A-Z0-9]{1,})?)-([0-9]+)/redoc", "/build/result/viewBuildReDoc.action?buildKey=$1-$2&buildNumber=$3");
-        putRegex(urlMappings, "/browse/([A-Z0-9]{2,})-([A-Z0-9]{2,}(?:-[A-Z][A-Z0-9]{1,})?)-([0-9]+)/redoc", "/chain/result/viewChainReDoc.action?buildKey=$1-$2&buildNumber=$3");
-    }
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -48,24 +38,13 @@ public class UrlFilter implements Filter {
             path = servletPath.replaceAll("^", "/");
         }
 
-        final String finalPath = path.replaceAll("/$", "");
+        Pattern pattern = Pattern.compile("/browse/([A-Z0-9]{2,})-([A-Z0-9]{2,}(?:-[A-Z][A-Z0-9]{1,})?)-([0-9]+)/redoc");
+        Matcher matcher = pattern.matcher(path.replaceAll("/$", ""));
+        if (!matcher.matches()) {
+            return null;
+        }
 
-        return StreamSupport.stream(urlMappings.entrySet().spliterator(), false)
-                .filter(entry -> {
-                    Pattern regex = (Pattern) entry.getKey();
-                    Matcher matcher = regex.matcher(finalPath);
-                    return matcher.matches();
-                })
-                .map(entry -> {
-                    Matcher m = entry.getKey().matcher(finalPath);
-                    return m.replaceAll(entry.getValue());
-                })
-                .findFirst()
-                .orElse(null);
-    }
-
-    private static void putRegex(Map<Pattern, String> map, String regex, String replacement) {
-        map.put(Pattern.compile(regex), replacement);
+        return matcher.replaceAll("/build/result/viewBuildReDoc.action?buildKey=$1-$2&buildNumber=$3");
     }
 
     private void forwardTo(String path, HttpServletRequest request, ServletResponse response) throws IOException, ServletException {

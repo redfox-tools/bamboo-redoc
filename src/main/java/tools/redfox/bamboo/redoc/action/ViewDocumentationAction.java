@@ -16,10 +16,13 @@ import com.atlassian.bamboo.ww2.aware.permissions.PlanReadSecurityAware;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.plugin.web.WebInterfaceManager;
 import org.apache.struts2.ServletActionContext;
+import tools.redfox.bamboo.redoc.helper.ReDocHelper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
+
+import static tools.redfox.bamboo.redoc.helper.ReDocHelper.findReDocArtifact;
 
 public class ViewDocumentationAction extends PlanResultsAction implements PlanReadSecurityAware {
     public ViewDocumentationAction(
@@ -33,7 +36,7 @@ public class ViewDocumentationAction extends PlanResultsAction implements PlanRe
             @ComponentImport CachedPlanManager cachedPlanManager,
             @ComponentImport VcsRepositoryConfigurationService vcsRepositoryConfigurationService,
             @ComponentImport BuildContextFactory buildContextFactory
-            ) {
+    ) {
         setAdministrationConfigurationAccessor(administrationConfigurationAccessor);
         setArtifactLinkManager(artifactLinkManager);
         setWebInterfaceManager(webInterfaceManager);
@@ -52,16 +55,15 @@ public class ViewDocumentationAction extends PlanResultsAction implements PlanRe
 
     @Override
     public String execute() throws Exception {
-        ArtifactLink link = findReDocArtifact(resultsSummary.getArtifactLinks());
-
+        Set<String> artifactNames = ReDocHelper.getAvailableArtifactNames(getResultsSummary());
         HttpServletRequest request = ServletActionContext.getRequest();
         Map<String, Object> context = ServletActionContext.getValueStack(request).getContext();
+
+        ArtifactLink link = findReDocArtifact(getResultsSummary().getArtifactLinks(), artifactNames);
         context.put("link", link);
 
         return super.execute();
     }
 
-    public static ArtifactLink findReDocArtifact(Collection<ArtifactLink> artifactLinkCollection) {
-        return artifactLinkCollection.stream().filter(a -> a.getArtifact().getLabel().equals("ReDoc Documentation")).findFirst().orElse(null);
-    }
+
 }
