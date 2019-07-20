@@ -3,8 +3,8 @@
 
 <html>
 <head>
-    <title>[@s.text name="tools.redfox.redoc.title"/]</title>
-    <meta name="decorator" content="main" />
+    <title>[@s.text name="Documentation"/]</title>
+    <meta name="tab" content="redoc"/>
 </head>
 
 <body>

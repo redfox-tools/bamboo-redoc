@@ -35,7 +35,7 @@ public class LinkConfition implements Condition {
                     return false;
                 }
                 return findReDocArtifact(buildResults.getArtifactLinks()) != null;
-            } catch (Exception var6) {
+            } catch (Exception e) {
             }
         }
 

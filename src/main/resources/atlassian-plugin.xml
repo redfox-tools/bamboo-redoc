@@ -26,8 +26,12 @@
         <condition class="tools.redfox.bamboo.redoc.action.LinkConfition"/>
     </web-item>
 
-    <servlet-filter name="Hello World Servlet" key="helloWorld" class="tools.redfox.bamboo.redoc.servlet.UrlFilter" location="before-dispatch" weight="200">
-        <description>Says Hello World, Australia or your name.</description>
+    <web-panel key="tools.redfox.redoc.panel.documentation" location="chainresult.summary.right">
+        <resource name="view" type="freemarker" location="/templates/tools/redfox/redoc/links.ftl"/>
+    </web-panel>
+
+    <servlet-filter name="Url Rewriting" key="tools.redfox.redoc.filter.url" class="tools.redfox.bamboo.redoc.servlet.UrlFilter" location="before-dispatch" weight="200">
+        <description>Rewrite URL for ReDoc viewer</description>
         <url-pattern>/browse/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
