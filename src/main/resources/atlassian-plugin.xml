@@ -1,0 +1,45 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/redoc/pluginIcon.png</param>
+        <param name="plugin-logo">images/redoc/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="bamboo-redoc"/>
+
+    <taskType key="tools.redfox.redoc.task" name="ReDoc" class="tools.redfox.bamboo.redoc.type.ReDocTaskType">
+        <description>Generate project documentation with ReDoc</description>
+        <category name="builder" />
+        <resource type="freemarker" name="edit" location="templates/tools/redfox/redoc/task.ftl"/>
+        <resource type="freemarker" name="view" location="templates/tools/redfox/redoc/task.ftl"/>
+        <configuration class="tools.redfox.bamboo.redoc.configuration.ReDocTaskConfiguration" />
+        <exporter class="tools.redfox.bamboo.redoc.exporter.ReDocExporter" />
+        <executable key="redoc" nameKey="tools.redfox.bamboo.redoc.runtime.executableName" pathHelpKey="tools.redfox.bamboo.redoc.runtime.executablePathHelp"/>
+    </taskType>
+
+    <web-item key="redoc:${buildKey}-${buildNumber}" name="redoc" section="results.subMenu/results" weight="40">
+        <label key="ReDoc"/>
+        <link linkId="redoc:${buildKey}-${buildNumber}">/browse/${buildKey}-${buildNumber}/redoc</link>
+        <condition class="tools.redfox.bamboo.redoc.action.LinkConfition"/>
+    </web-item>
+
+    <servlet-filter name="Hello World Servlet" key="helloWorld" class="tools.redfox.bamboo.redoc.servlet.UrlFilter" location="before-dispatch" weight="200">
+        <description>Says Hello World, Australia or your name.</description>
+        <url-pattern>/browse/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </servlet-filter>
+
+    <xwork key="tools.redfox.redoc.work.viewer" name="ReDoc" >
+        <package extends="buildAdmin" name="ReDoc Viewer" namespace="/build/result">
+            <default-interceptor-ref name="defaultStack"/>
+            <action class="tools.redfox.bamboo.redoc.action.ViewDocumentationAction" name="viewBuildReDoc">
+                <result name="input" type="freemarker">/templates/tools/redfox/redoc/view.ftl</result>
+                <result name="success" type="freemarker">/templates/tools/redfox/redoc/view.ftl</result>
+            </action>
+        </package>
+    </xwork>
+</atlassian-plugin>
