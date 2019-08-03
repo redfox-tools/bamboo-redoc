@@ -64,6 +64,4 @@ public class ViewDocumentationAction extends PlanResultsAction implements PlanRe
 
         return super.execute();
     }
-
-
 }
