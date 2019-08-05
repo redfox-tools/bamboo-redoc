@@ -13,6 +13,7 @@
     <taskType key="tools.redfox.redoc.task" name="ReDoc" class="tools.redfox.bamboo.redoc.type.ReDocTaskType">
         <description>Generate project documentation with ReDoc</description>
         <category name="builder" />
+        <resource location="images/redoc/task.png" name="icon" type="download"/>
         <resource type="freemarker" name="edit" location="templates/tools/redfox/redoc/task.ftl"/>
         <resource type="freemarker" name="view" location="templates/tools/redfox/redoc/task.ftl"/>
         <configuration class="tools.redfox.bamboo.redoc.configuration.ReDocTaskConfiguration" />
